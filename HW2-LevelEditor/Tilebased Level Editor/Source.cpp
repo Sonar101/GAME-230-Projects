@@ -40,6 +40,7 @@ int main()
         // --- Load an image file from a file
         sf::Image tileImage;
         if (!tileImage.loadFromFile("./Tileset/Platformer-" + std::to_string(i) + ".png")) return -1;
+        std::cout << "Loaded ./Tileset/Platformer-" << std::to_string(i) << ".png" << std::endl;
         // --- Copy image to a texture
         sf::Texture tileTexture;
         if (!tileTexture.loadFromImage(tileImage, sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE))) return -1;
@@ -87,28 +88,34 @@ int main()
             if (event.type == sf::Event::KeyPressed)
             {
                 // changing tile on brush
-                if (event.key.code == sf::Keyboard::Up && currTileNum < NUM_TILE_IMAGES - 1)
+                if (event.key.code == sf::Keyboard::Up)
                 {
-                    std::cout << "Swapping tile" << std::endl;
                     currTileNum++;
+                    if (currTileNum >= NUM_TILE_IMAGES)
+                    {
+                        currTileNum = 0;
+                    }
                     tileSpriteCursor.setTexture(textures[currTileNum]);
                 }
-                else if (event.key.code == sf::Keyboard::Down && currTileNum > 0)
+                else if (event.key.code == sf::Keyboard::Down)
                 {
-                    std::cout << "Swapping tile" << std::endl;
                     currTileNum--;
+                    if (currTileNum < 0)
+                    {
+                        currTileNum = NUM_TILE_IMAGES - 1;
+                    }
                     tileSpriteCursor.setTexture(textures[currTileNum]);
                 }
 
                 // --- take a screenshot
                 if (event.key.code == sf::Keyboard::Space)
                 {
-                    std::cout << "Saved screenshot" << std::endl;
+                    std::cout << "Saved Screenshot" << std::endl;
                     // update the texture with the current window
                     screenshotTexture.update(window);
                     // save contents of texture to an image and save it
                     screenshotImage = screenshotTexture.copyToImage();
-                    screenshotImage.saveToFile("Screenshot.png");
+                    screenshotImage.saveToFile("Homework 2 Screenshot.png");
                 }
 
                 // --- save the level
@@ -129,7 +136,7 @@ int main()
                     std::ofstream outfile("level.txt");
                     outfile << levelString << std::endl;
                     outfile.close();
-                    std::cout << "saved level" << std::endl;
+                    std::cout << "Saved Level" << std::endl;
                 }
 
                 // --- Load the level
@@ -140,35 +147,37 @@ int main()
                     if (!inputLevelFile.is_open())
                     {
                         // can't open file, so give an error message
-                        std::cout << "ERROR - No level.txt file to load" << std::endl;
+                        std::cout << "ERROR - Could not find level.txt file to load" << std::endl;
                     }
                     else
                     {
-                        // read input
+                        // --- read input
+                        
                         std::string currLine;
                         int column = 0;
+                        // for every line in the text file...
                         while(getline(inputLevelFile, currLine))
                         {
                             int row = 0;
-
                             std::string currWord = "";
                             int currCharNum = 0;
                             char currChar = currLine[currCharNum];
-                            std::cout << currLine.length() << " " << currLine << std::endl;
                             while (currCharNum < currLine.length()) {
+                                // ...loop through the line and build the numbers out of single characters
                                 if (currChar == ' ')
                                 {
-                                    if (stoi(currWord) != -1) {
+                                    if (stoi(currWord) != -1) 
+                                    {
+                                        // select the texture associated with the correct number
                                         levelSprites[column][row].setTexture(textures[stoi(currWord)]);
                                     }
                                     else 
                                     {
+                                        // -1 should be an empty texture
                                         levelSprites[column][row].setTexture(emptyTexture);
                                     }
-                                    // save tile type in the level array (for saving)
+                                    // save tile type in the level array (for saving the level later)
                                     levelArray[column][row] = stoi(currWord);
-
-                                    std::cout << "finished word: " << stoi(currWord) << std::endl;
                                     row++;
                                     currWord = "";
                                 }
@@ -179,11 +188,10 @@ int main()
                                 currCharNum++;
                                 currChar = currLine[currCharNum];
                             }
-                            std::cout << "next line" << std::endl;
                             column++;
                         }
 
-                        std::cout << "level loaded" << std::endl;
+                        std::cout << "Level Loaded" << std::endl;
                         inputLevelFile.close();
                     }
 
@@ -224,6 +232,15 @@ int main()
             levelSprites[tileX][tileY].setTexture(textures[currTileNum]);
             // save tile type in the level array (for saving)
             levelArray[tileX][tileY] = currTileNum;
+        }
+
+        // --- if the right mouse is held down...
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && isTileSelected)
+        {
+            // reset the texture of the tile under the mouse
+            levelSprites[tileX][tileY].setTexture(emptyTexture);
+            // save tile type in the level array (for saving)
+            levelArray[tileX][tileY] = -1;
         }
         
         /* ----------------- Rendering ----------------- */
