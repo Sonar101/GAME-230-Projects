@@ -7,6 +7,7 @@
 #include <SFML/Main.hpp>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 
 int main()
@@ -15,6 +16,8 @@ int main()
     const int NUM_TILES_IN_X = 10;
     const int NUM_TILES_IN_Y = 10;
     const int NUM_TILE_IMAGES = 21; // 0 index
+
+    int currTileNum = 0;
     
     // initialize the render window
     sf::RenderWindow window(sf::VideoMode(TILE_SIZE * NUM_TILES_IN_X, TILE_SIZE * NUM_TILES_IN_Y), "SFML works!");
@@ -26,6 +29,10 @@ int main()
 
     /* ----------------- Tileset Setup ----------------- */
     
+    // make a default, empty texture;
+    sf::Texture emptyTexture;
+    emptyTexture.create(TILE_SIZE, TILE_SIZE);
+
     // Load all textures into array
     sf::Texture* textures = new sf::Texture[NUM_TILE_IMAGES];
     for (int i = 0; i < NUM_TILE_IMAGES; i++)
@@ -40,7 +47,7 @@ int main()
         textures[i] = tileTexture;
     }
 
-    // --- Create array of sprites
+    // Create array of sprites
     sf::Sprite** levelSprites = new sf::Sprite*[NUM_TILES_IN_X];
     for (int i = 0; i < NUM_TILES_IN_X; i++) 
     {
@@ -53,9 +60,22 @@ int main()
         {
             // allocating the inner array (rows)
             levelSprites[column][row].setPosition(column * TILE_SIZE, row * TILE_SIZE);
-            levelSprites[column][row].setTexture(textures[row % NUM_TILE_IMAGES]);
+            levelSprites[column][row].setTexture(emptyTexture);
         }
     }
+
+    // Create array of ints for storing scene state (to enable level saving)
+    int levelArray[NUM_TILES_IN_X][NUM_TILES_IN_Y];
+    for (int column = 0; column < NUM_TILES_IN_X; column++)
+    {
+        for (int row = 0; row < NUM_TILES_IN_Y; row++)
+        {
+            levelArray[column][row] = -1;
+        }
+    }
+
+    // Create the tile sprite cursor (for indicating mouse pos and the tile that will be drawn)
+    sf::Sprite tileSpriteCursor(textures[currTileNum]);
     
     // run while window is open
     while (window.isOpen())
@@ -63,17 +83,21 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            /* checking single key press events */
+            /* ----------------- checking single key press events ----------------- */
             if (event.type == sf::Event::KeyPressed)
             {
                 // changing tile on brush
-                if (event.key.code == sf::Keyboard::Up)
+                if (event.key.code == sf::Keyboard::Up && currTileNum < NUM_TILE_IMAGES - 1)
                 {
                     std::cout << "Swapping tile" << std::endl;
+                    currTileNum++;
+                    tileSpriteCursor.setTexture(textures[currTileNum]);
                 }
-                else if (event.key.code == sf::Keyboard::Down)
+                else if (event.key.code == sf::Keyboard::Down && currTileNum > 0)
                 {
                     std::cout << "Swapping tile" << std::endl;
+                    currTileNum--;
+                    tileSpriteCursor.setTexture(textures[currTileNum]);
                 }
 
                 // --- take a screenshot
@@ -84,11 +108,89 @@ int main()
                     screenshotTexture.update(window);
                     // save contents of texture to an image and save it
                     screenshotImage = screenshotTexture.copyToImage();
-                    screenshotImage.saveToFile("PaintingToolScreenshot.png");
+                    screenshotImage.saveToFile("Screenshot.png");
+                }
+
+                // --- save the level
+                if (event.key.code == sf::Keyboard::S)
+                {
+                    // build level string to represent tile positions
+                    std::string levelString = "";
+                    for (int column = 0; column < NUM_TILES_IN_X; column++)
+                    {
+                        for (int row = 0; row < NUM_TILES_IN_Y; row++)
+                        {
+                            levelString = levelString + std::to_string(levelArray[column][row]) + " ";
+                        }
+                        levelString = levelString + "\n";
+                    }
+
+                    // open the level text file and save the level string in it
+                    std::ofstream outfile("level.txt");
+                    outfile << levelString << std::endl;
+                    outfile.close();
+                    std::cout << "saved level" << std::endl;
+                }
+
+                // --- Load the level
+                if (event.key.code == sf::Keyboard::L)
+                {
+                    std::ifstream inputLevelFile;
+                    inputLevelFile.open("level.txt", std::ios::out);
+                    if (!inputLevelFile.is_open())
+                    {
+                        // can't open file, so give an error message
+                        std::cout << "ERROR - No level.txt file to load" << std::endl;
+                    }
+                    else
+                    {
+                        // read input
+                        std::string currLine;
+                        int column = 0;
+                        while(getline(inputLevelFile, currLine))
+                        {
+                            int row = 0;
+
+                            std::string currWord = "";
+                            int currCharNum = 0;
+                            char currChar = currLine[currCharNum];
+                            std::cout << currLine.length() << " " << currLine << std::endl;
+                            while (currCharNum < currLine.length()) {
+                                if (currChar == ' ')
+                                {
+                                    if (stoi(currWord) != -1) {
+                                        levelSprites[column][row].setTexture(textures[stoi(currWord)]);
+                                    }
+                                    else 
+                                    {
+                                        levelSprites[column][row].setTexture(emptyTexture);
+                                    }
+                                    // save tile type in the level array (for saving)
+                                    levelArray[column][row] = stoi(currWord);
+
+                                    std::cout << "finished word: " << stoi(currWord) << std::endl;
+                                    row++;
+                                    currWord = "";
+                                }
+                                else if (currChar != '\n')
+                                {
+                                    currWord = currWord + currChar;
+                                }
+                                currCharNum++;
+                                currChar = currLine[currCharNum];
+                            }
+                            std::cout << "next line" << std::endl;
+                            column++;
+                        }
+
+                        std::cout << "level loaded" << std::endl;
+                        inputLevelFile.close();
+                    }
+
                 }
             }
             
-            // close the window during a closed event
+            /* ----------------- close the window during a closed event ----------------- */
             if (event.type == sf::Event::Closed)
             {
                 /* close window */
@@ -96,9 +198,38 @@ int main()
             }
         }
 
-        // Render
-        window.clear();
+        /* ----------------- Manage mouse input for tile drawing ----------------- */
 
+        // --- get mouse position relative to the window
+        int winX = sf::Mouse::getPosition(window).x;
+        int winY = sf::Mouse::getPosition(window).y;
+        bool isTileSelected = false;
+
+        // --- get *tile* position of the mouse based on window position
+        int tileX = (int)winX / (int)TILE_SIZE;
+        int tileY = (int)winY / (int)TILE_SIZE;
+
+        // --- if the mouse is within the bounds of the tiles...
+        if (tileX >= 0 && tileY >= 0 && tileX < NUM_TILES_IN_X && tileY < NUM_TILES_IN_Y) 
+        {
+            // position the tileSpriteCursor over this tile
+            tileSpriteCursor.setPosition(tileX* TILE_SIZE, tileY* TILE_SIZE);
+            isTileSelected = true;
+        }
+        
+        // --- if the left mouse is held down...
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && isTileSelected)
+        {
+            // set the texture of the tile under the mouse
+            levelSprites[tileX][tileY].setTexture(textures[currTileNum]);
+            // save tile type in the level array (for saving)
+            levelArray[tileX][tileY] = currTileNum;
+        }
+        
+        /* ----------------- Rendering ----------------- */
+        window.clear();
+        
+        // draw all of the sprites in the scene
         for (int column = 0; column < NUM_TILES_IN_X; column++)
         {
             for (int row = 0; row < NUM_TILES_IN_Y; row++)
@@ -107,14 +238,18 @@ int main()
             }
         }
 
+        // draw the tileSpriteCursor if a tile is selected
+        if (isTileSelected)
+            window.draw(tileSpriteCursor);
+
         window.display();
     }
 
-    /* Delete allocations */
-    
+    /* ----------------- Delete allocations ----------------- */
+
     // delete texture array
     delete[] textures;
-    
+
     // delete sprite 2D array
     for (int i = 0; i < NUM_TILES_IN_X; i++)
     {
