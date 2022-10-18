@@ -1,0 +1,7 @@
+﻿  Particle.cpp
+  ParticleEffect.cpp
+C:\School Dev\GAMES 230 Projects\GAME-230-Projects\HW3-ParticleSystem\Particle System\ParticleEffect.cpp(6,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Source.cpp
+C:\School Dev\GAMES 230 Projects\GAME-230-Projects\HW3-ParticleSystem\Particle System\Source.cpp(38,99): warning C4305: 'argument': truncation from 'double' to 'float'
+  Generating Code...
+  Particle System.vcxproj -> C:\School Dev\GAMES 230 Projects\GAME-230-Projects\HW3-ParticleSystem\Particle System\Debug\Particle System.exe
