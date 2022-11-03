@@ -19,7 +19,7 @@ public:
 	void SetPosition(float, float);
 	void SetVecolity(float, float);
 	void SetSize(float);
-	void Update(sf::Time, sf::Time);
+	void Update(const sf::Time&, const sf::Time&);
 	void Render(sf::RenderWindow&);
 	~Particle();
 private:

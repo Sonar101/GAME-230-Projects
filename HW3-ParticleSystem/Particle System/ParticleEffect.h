@@ -20,8 +20,8 @@ const int NUM_PARTICLES = 30;
 class ParticleEffect {
 public:
 	ParticleEffect();
-	ParticleEffect(sf::Vector2i mousePosition, sf::Time minLifeSpan, sf::Time maxLifeSpan, float minSize, float maxSize, float maxVelocity);
-	void Update(sf::Time);
+	ParticleEffect(const sf::Vector2i&, const sf::Time&, const sf::Time&, float, float, float);
+	void Update(const sf::Time&);
 	void Render(sf::RenderWindow& window);
 	~ParticleEffect();
 private:

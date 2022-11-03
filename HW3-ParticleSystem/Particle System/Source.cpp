@@ -10,7 +10,7 @@
 #include <string>
 #include <iostream>
 
-#include "ParticleEffect.h"
+#include "Game.h"
 
 int main()
 {
@@ -18,38 +18,16 @@ int main()
 
     // initialize the render window
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Particle Effect");
-    
-    // set up clock
-    sf::Clock clock;
 
-    // create particleEffect pointer
-    ParticleEffect* particleEffect = new ParticleEffect();
+    gm::Game game;
 
     // run while window is open
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // create new particle effect with mouse click (delete and reallocate)
-            if (event.type == sf::Event::MouseButtonPressed) {
-                clock.restart();
-                delete particleEffect;
-                particleEffect = new ParticleEffect(sf::Mouse::getPosition(window), sf::seconds(.2), sf::seconds(3), 1, 17, 500);
-            }
-            
-            // close the window during a closed event
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        // update and render particle effect
-        particleEffect->Update(clock.getElapsedTime());
-        window.clear();
-        particleEffect->Render(window);
-        window.display();
+        game.handleInput(window);
+        game.update(window);
+        game.render(window);
     }
 
-    delete particleEffect;
     return 0;
 }

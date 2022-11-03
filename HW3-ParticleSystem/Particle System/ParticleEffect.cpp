@@ -13,7 +13,7 @@ ParticleEffect::ParticleEffect() {
 	prevElapsed = sf::seconds(0);
 }
 
-ParticleEffect::ParticleEffect(sf::Vector2i mousePosition, sf::Time minLifeSpan, sf::Time maxLifeSpan, float minSize, float maxSize, float maxVelocity) {
+ParticleEffect::ParticleEffect(const sf::Vector2i& mousePosition, const sf::Time& minLifeSpan, const sf::Time& maxLifeSpan, float minSize, float maxSize, float maxVelocity) {
 	particleArray = new Particle[NUM_PARTICLES];
 	for (int i = 0; i < NUM_PARTICLES; i++) {
 		// Randomization calculation
@@ -31,7 +31,7 @@ ParticleEffect::ParticleEffect(sf::Vector2i mousePosition, sf::Time minLifeSpan,
 	prevElapsed = sf::seconds(0);
 }
 
-void ParticleEffect::Update(sf::Time elapsedTime) {
+void ParticleEffect::Update(const sf::Time& elapsedTime) {
 	// determine how much time elapsed in this frame (deltaTime)
 	sf::Time deltaTime = elapsedTime - prevElapsed;
 	prevElapsed = elapsedTime;

@@ -25,7 +25,7 @@ void Particle::SetSize(float size) {
 	shape.setRadius(size);
 }
 
-void Particle::Update(sf::Time elapsedTime, sf::Time deltaTime) {
+void Particle::Update(const sf::Time& elapsedTime, const sf::Time& deltaTime) {
 	
 	if (alive) {
 		// add force to alter position (with respect to time)
