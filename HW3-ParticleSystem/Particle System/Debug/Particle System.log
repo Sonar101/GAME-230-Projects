@@ -1,3 +1,4 @@
-﻿  Game.cpp
-C:\School Dev\GAMES 230 Projects\GAME-230-Projects\HW3-ParticleSystem\Particle System\Game.cpp(20,95): warning C4305: 'argument': truncation from 'double' to 'float'
+﻿  CircleParticle.cpp
+  ShapeParticle.cpp
+  Generating Code...
   Particle System.vcxproj -> C:\School Dev\GAMES 230 Projects\GAME-230-Projects\HW3-ParticleSystem\Particle System\Debug\Particle System.exe

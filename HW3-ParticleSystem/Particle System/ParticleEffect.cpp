@@ -6,9 +6,10 @@ ParticleEffect::ParticleEffect() {
 	srand(time(0));
 	particleArray = new Particle[NUM_PARTICLES];
 	for (int i = 0; i < NUM_PARTICLES; i++) {
-		particleArray[i].lifeSpan = sf::seconds(-1);
-		particleArray[i].SetPosition(0,0);
-		particleArray[i].SetVecolity(0,0);
+		particleArray[i].SetLifespan(sf::seconds(-1));
+		particleArray[i].SetLifespanRemaining(sf::seconds(-1));
+		particleArray[i].SetPosition(sf::Vector2f(0,0));
+		particleArray[i].SetVecolity(sf::Vector2f(0, 0));
 	}
 	prevElapsed = sf::seconds(0);
 }
@@ -23,10 +24,11 @@ ParticleEffect::ParticleEffect(const sf::Vector2i& mousePosition, const sf::Time
 		float velocityYCalc = Random::Range(-maxVelocity, maxVelocity);
 		
 		// set random vars of particles
-		particleArray[i].lifeSpan = sf::seconds(lifeSpanCalc);
-		particleArray[i].SetPosition((float)mousePosition.x, (float)mousePosition.y);
+		particleArray[i].SetLifespan(sf::seconds(lifeSpanCalc));
+		particleArray[i].SetLifespanRemaining(sf::seconds(lifeSpanCalc));
+		particleArray[i].SetPosition(sf::Vector2f((float)mousePosition.x, (float)mousePosition.y));
 		particleArray[i].SetSize(sizeCalc);
-		particleArray[i].SetVecolity(velocityXCalc, velocityYCalc);
+		particleArray[i].SetVecolity(sf::Vector2f(velocityXCalc, velocityYCalc));
 	}
 	prevElapsed = sf::seconds(0);
 }
@@ -37,7 +39,7 @@ void ParticleEffect::Update(const sf::Time& elapsedTime) {
 	prevElapsed = elapsedTime;
 	// update all of the particles in the array
 	for (int  i = 0; i < NUM_PARTICLES; i++) {
-		particleArray[i].Update(elapsedTime, deltaTime);
+		particleArray[i].Update(deltaTime);
 	}
 }
 

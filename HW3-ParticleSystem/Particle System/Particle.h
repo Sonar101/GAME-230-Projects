@@ -14,18 +14,29 @@
 
 class Particle {
 public:
-	sf::Time lifeSpan;
 	Particle();
-	void SetPosition(float, float);
-	void SetVecolity(float, float);
-	void SetSize(float);
-	void Update(const sf::Time&, const sf::Time&);
-	void Render(sf::RenderWindow&);
 	~Particle();
+	void Update(const sf::Time& deltaTime);
+	void Render(sf::RenderWindow& window);
+	
+	// -- Getters
+	const sf::Vector2f& GetVelocity();
+	const sf::Time& GetLifespan();
+	const sf::Time& GetLifespanRemaining();
+	bool GetIsAlive();
+	
+	// --- Setters
+	void SetPosition(const sf::Vector2f& vector);
+	void SetVecolity(const sf::Vector2f& vector);
+	void SetLifespan(const sf::Time& time);
+	void SetLifespanRemaining(const sf::Time& time);
+	void SetIsAlive(bool condition);
+	void SetSize(float);
 private:
-	float velocityX;
-	float velocityY;
-	bool alive;
+	sf::Vector2f velocity;
+	sf::Time lifespan;
+	sf::Time lifespanRemaining;
+	bool isAlive;
 	sf::CircleShape shape;
 };
 

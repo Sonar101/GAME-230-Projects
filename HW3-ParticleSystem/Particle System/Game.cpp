@@ -13,6 +13,19 @@ void Game::handleInput(sf::RenderWindow& window) {
     sf::Event event;
     while (window.pollEvent(event))
     {
+        // changing tile on brush
+        if (event.type == sf::Event::KeyPressed) 
+        {
+            if (event.key.code == sf::Keyboard::Num1)
+            {
+                std::cout << "Main Particle Effect Selected" << std::endl;
+            }
+            else if (event.key.code == sf::Keyboard::Num2)
+            {
+                std::cout << "Second Particle Effect Selected" << std::endl;
+            }
+        }
+        
         // create new particle effect with mouse click (delete and reallocate)
         if (event.type == sf::Event::MouseButtonPressed) {
             clock.restart();
