@@ -20,12 +20,15 @@
 /* File Includes */
 #include "ParticleEffect.h"
 #include "SnowEffect.h"
+#include "FireworkEffect.h"
 
 namespace gm {
 	class Game {
 	private:
 		sf::Clock clock;
 		ParticleEffect* particleEffect;
+		int particleEffectMode;
+		bool particleEffectFullySwitched;
 	public:
 		/* prototypes */
 		Game();

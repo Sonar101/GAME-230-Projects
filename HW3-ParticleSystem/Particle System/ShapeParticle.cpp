@@ -5,7 +5,7 @@ ShapeParticle::ShapeParticle() {
 }
 
 ShapeParticle::~ShapeParticle() {
-	std::cout << "ShapeParticle deconstructor" << std::endl;
+	
 }
 
 void ShapeParticle::Update(const sf::Time& deltaTime) {

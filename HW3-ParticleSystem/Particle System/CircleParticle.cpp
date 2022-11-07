@@ -11,6 +11,13 @@ CircleParticle::~CircleParticle() {
 
 void CircleParticle::Update(const sf::Time& deltaTime) {
 	ShapeParticle::Update(deltaTime);
+	float opacityVal = GetLifespanRemaining().asSeconds() / GetLifespan().asSeconds();
+	if (opacityVal >= 0) {
+		shape->setFillColor(sf::Color(255, 255, 255, 255 * opacityVal));
+	}
+	else {
+		shape->setFillColor(sf::Color(255, 255, 255, 0));
+	}
 }
 
 void CircleParticle::Render(sf::RenderWindow& window) {

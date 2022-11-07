@@ -6,6 +6,8 @@ using namespace sf;
 Game::Game() {
     srand(time(0));
     particleEffect = new SnowEffect();
+    particleEffectMode = 0;
+    particleEffectFullySwitched = true;
 }
 
 void Game::handleInput(sf::RenderWindow& window) {
@@ -19,18 +21,44 @@ void Game::handleInput(sf::RenderWindow& window) {
         {
             if (event.key.code == sf::Keyboard::Num1)
             {
-                std::cout << "Main Particle Effect Selected" << std::endl;
+                std::cout << "Snow Particle Effect Selected" << std::endl;
+                if (particleEffectMode != 0) {
+                    particleEffectMode = 0;
+                    particleEffectFullySwitched = false;
+                }
             }
             else if (event.key.code == sf::Keyboard::Num2)
             {
-                std::cout << "Second Particle Effect Selected" << std::endl;
+                std::cout << "Firework Particle Effect Selected" << std::endl;
+                if (particleEffectMode != 1) {
+                    particleEffectMode = 1;
+                    particleEffectFullySwitched = false;
+                }
             }
         }
         
         // create new particle effect with mouse click (delete and reallocate)
         if (event.type == sf::Event::MouseButtonPressed) {
             clock.restart();
-            particleEffect->CreateParticles(NUM_PARTICLES, sf::Mouse::getPosition(window));
+            
+            // if switch has not occured yet
+            if (!particleEffectFullySwitched) {
+                if (particleEffectMode == 0) {
+                    delete dynamic_cast<FireworkEffect*>(particleEffect);
+                    particleEffect = new SnowEffect();
+                } else {
+                    delete dynamic_cast<SnowEffect*>(particleEffect);
+                    particleEffect = new FireworkEffect();
+                }
+                particleEffectFullySwitched = true;
+            }
+            
+            if (particleEffectMode == 0) {
+                particleEffect->CreateParticles(600, sf::Mouse::getPosition(window));
+            }
+            else {
+                particleEffect->CreateParticles(100, sf::Mouse::getPosition(window));
+            }
         }
 
         // close the window during a closed event
@@ -55,6 +83,20 @@ void Game::render(sf::RenderWindow& window) {
 }
 
 Game::~Game() {
-    std::cout << "Game Deconstructor" << std::endl;
-    delete dynamic_cast<SnowEffect*>(particleEffect);
+    if (particleEffectFullySwitched) {
+        if (particleEffectMode == 0) {
+            delete dynamic_cast<SnowEffect*>(particleEffect);
+        }
+        else {
+            delete dynamic_cast<FireworkEffect*>(particleEffect);
+        }
+    } else {
+        if (particleEffectMode == 1) {
+            delete dynamic_cast<SnowEffect*>(particleEffect);
+        }
+        else {
+            delete dynamic_cast<FireworkEffect*>(particleEffect);
+        }
+    }
+    
 }

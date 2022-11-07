@@ -11,11 +11,13 @@
 #include <iostream>
 
 #include "ParticleEffect.h"
+#include "ColorParticle.h"
 
 class FireworkEffect : public ParticleEffect {
 public:
 	FireworkEffect();
 	~FireworkEffect();
+	void CreateParticles(int numParticles, const sf::Vector2i& mousePosition) override;
 	void CreateParticle(int index, const sf::Vector2i& mousePosition) override;
 private:
 

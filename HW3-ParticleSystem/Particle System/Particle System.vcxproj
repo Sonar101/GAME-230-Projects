@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CircleParticle.cpp" />
+    <ClCompile Include="ColorParticle.cpp" />
     <ClCompile Include="FireworkEffect.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Particle.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CircleParticle.h" />
+    <ClInclude Include="ColorParticle.h" />
     <ClInclude Include="FireworkEffect.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Particle.h" />
