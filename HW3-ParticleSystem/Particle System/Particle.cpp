@@ -7,38 +7,41 @@ const float SHAPE_SIZE = 10;
 Particle::Particle() {
 	lifespan = sf::seconds(0);
 	lifespanRemaining = lifespan;
+	position = sf::Vector2f(0,0);
 	velocity = sf::Vector2f(0,0);
 	isAlive = true;
-	shape = sf::CircleShape(SHAPE_SIZE);
 }
 
 void Particle::Update(const sf::Time& deltaTime) {
 	
+	// manage lifespan
+	lifespanRemaining -= deltaTime;
+
+	// check if still alive based on lifespan
+	if (lifespanRemaining > sf::seconds(0)) {
+		isAlive = true;
+	} else {
+		isAlive = false;
+	}
+
 	if (isAlive) {
 		// add force to alter position (with respect to time)
-		shape.setPosition(shape.getPosition().x + velocity.x * deltaTime.asSeconds(), shape.getPosition().y + velocity.y * deltaTime.asSeconds());
-
-		// manage lifespawn
-		lifespanRemaining -= deltaTime;
-
-		// check if still alive
-		if (lifespanRemaining <= sf::seconds(0)) {
-			isAlive = false;
+		if (deltaTime.asSeconds() >= 0) {
+			position = sf::Vector2f(position.x + velocity.x * deltaTime.asSeconds(), position.y + velocity.y * deltaTime.asSeconds());
 		}
-	}
-}
-
-void Particle::Render(sf::RenderWindow& window) {
-	if (isAlive) {
-		window.draw(shape);
+		
 	}
 }
 
 Particle::~Particle() {
-
+	
 }
 
 // --- Getters
+const sf::Vector2f& Particle::GetPosition() {
+	return position;
+}
+
 const sf::Vector2f& Particle::GetVelocity() {
 	return velocity;
 }
@@ -57,7 +60,7 @@ bool Particle::GetIsAlive() {
 
 // --- Setters
 void Particle::SetPosition(const sf::Vector2f& vector) {
-	shape.setPosition(vector);
+	position = vector;
 }
 
 void Particle::SetVecolity(const sf::Vector2f& vector) {
@@ -75,8 +78,4 @@ void Particle::SetLifespanRemaining(const sf::Time& time) {
 
 void Particle::SetIsAlive(bool condition) {
 	isAlive = condition;
-}
-
-void Particle::SetSize(float size) {
-	shape.setRadius(size);
 }

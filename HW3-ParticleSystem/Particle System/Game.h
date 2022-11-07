@@ -19,6 +19,7 @@
 
 /* File Includes */
 #include "ParticleEffect.h"
+#include "SnowEffect.h"
 
 namespace gm {
 	class Game {

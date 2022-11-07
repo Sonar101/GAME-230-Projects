@@ -1,21 +1,22 @@
 #include "ShapeParticle.h"
 
 ShapeParticle::ShapeParticle() {
-	shape = new sf::CircleShape();
-}
-
-ShapeParticle::~ShapeParticle() {
 	
 }
 
-void ShapeParticle::Update() {
-
+ShapeParticle::~ShapeParticle() {
+	std::cout << "ShapeParticle deconstructor" << std::endl;
 }
 
-void ShapeParticle::Render() {
-
+void ShapeParticle::Update(const sf::Time& deltaTime) {
+	if (isAlive) {
+		Particle::Update(deltaTime);
+		
+		// set the graphic's position
+		shape->setPosition(position);
+	}
 }
 
-void ShapeParticle::GetShape() {
-
+const sf::Shape* ShapeParticle::GetShape() {
+	return shape;
 }

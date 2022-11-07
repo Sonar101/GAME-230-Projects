@@ -12,21 +12,24 @@
 #include <SFML/Main.hpp>
 #include <iostream>
 
-#include "Particle.h"
-#include "Random.h"
+#include "Particle.h";
+#include "CircleParticle.h"
+#include "Random.h";
 
 const int NUM_PARTICLES = 30;
 
 class ParticleEffect {
 public:
 	ParticleEffect();
-	ParticleEffect(const sf::Vector2i&, const sf::Time&, const sf::Time&, float, float, float);
-	void Update(const sf::Time&);
+	virtual void CreateParticles(int numParticles, const sf::Vector2i& mousePosition);
+	virtual void CreateParticle(int index, const sf::Vector2i& mousePosition) = 0;
+	virtual void Update(const sf::Time&);
 	void Render(sf::RenderWindow& window);
 	~ParticleEffect();
-private:
-	Particle* particleArray;
+protected:
+	Particle** particleArray;
 	sf::Time prevElapsed;
+	int arraySize;
 };
 
 #endif 

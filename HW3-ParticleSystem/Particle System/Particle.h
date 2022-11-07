@@ -16,28 +16,28 @@ class Particle {
 public:
 	Particle();
 	~Particle();
-	void Update(const sf::Time& deltaTime);
-	void Render(sf::RenderWindow& window);
+	virtual void Update(const sf::Time& deltaTime);
+	virtual void Render(sf::RenderWindow& window) = 0;
 	
 	// -- Getters
+	const sf::Vector2f& GetPosition();
 	const sf::Vector2f& GetVelocity();
 	const sf::Time& GetLifespan();
 	const sf::Time& GetLifespanRemaining();
 	bool GetIsAlive();
 	
 	// --- Setters
-	void SetPosition(const sf::Vector2f& vector);
+	virtual void SetPosition(const sf::Vector2f& vector);
 	void SetVecolity(const sf::Vector2f& vector);
 	void SetLifespan(const sf::Time& time);
 	void SetLifespanRemaining(const sf::Time& time);
 	void SetIsAlive(bool condition);
-	void SetSize(float);
-private:
+protected:
+	sf::Vector2f position;
 	sf::Vector2f velocity;
 	sf::Time lifespan;
 	sf::Time lifespanRemaining;
 	bool isAlive;
-	sf::CircleShape shape;
 };
 
 #endif // !PARTICLE_H

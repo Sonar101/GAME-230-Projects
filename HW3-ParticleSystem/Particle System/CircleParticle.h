@@ -16,8 +16,8 @@ class CircleParticle : public ShapeParticle {
 public:
 	CircleParticle();
 	~CircleParticle();
-	void Update();
-	void Render();
+	void Update(const sf::Time& deltaTime) override;
+	void Render(sf::RenderWindow& window) override;
 
 	// --- Getters
 	float GetRadius();

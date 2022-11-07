@@ -16,9 +16,9 @@ class ShapeParticle : public Particle {
 public:
 	ShapeParticle();
 	~ShapeParticle();
-	void Update();
-	void Render();
-	void GetShape();
+	virtual void Update(const sf::Time& deltaTime);
+	virtual void Render(sf::RenderWindow& window) = 0;
+	const sf::Shape* GetShape();
 protected:
 	sf::Shape* shape;
 };

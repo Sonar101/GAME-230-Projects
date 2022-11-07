@@ -4,7 +4,8 @@ using namespace gm;
 using namespace sf;
 
 Game::Game() {
-    particleEffect = new ParticleEffect();
+    srand(time(0));
+    particleEffect = new SnowEffect();
 }
 
 void Game::handleInput(sf::RenderWindow& window) {
@@ -29,8 +30,7 @@ void Game::handleInput(sf::RenderWindow& window) {
         // create new particle effect with mouse click (delete and reallocate)
         if (event.type == sf::Event::MouseButtonPressed) {
             clock.restart();
-            delete particleEffect;
-            particleEffect = new ParticleEffect(sf::Mouse::getPosition(window), sf::seconds(.1), sf::seconds(2), 1, 17, 500);
+            particleEffect->CreateParticles(NUM_PARTICLES, sf::Mouse::getPosition(window));
         }
 
         // close the window during a closed event
@@ -55,5 +55,6 @@ void Game::render(sf::RenderWindow& window) {
 }
 
 Game::~Game() {
-    delete particleEffect;
+    std::cout << "Game Deconstructor" << std::endl;
+    delete dynamic_cast<SnowEffect*>(particleEffect);
 }

@@ -33,6 +33,12 @@
     <ClCompile Include="CircleParticle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FireworkEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SnowEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h">
@@ -51,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CircleParticle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FireworkEffect.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SnowEffect.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
