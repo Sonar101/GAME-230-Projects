@@ -6,9 +6,29 @@ using namespace gm;
 using namespace sf;
 
 // Implement constructor, this will effectively be a setup function as the game gets more complex
-Game::Game() : window(VideoMode(GameWidth, GameHeight), "Game"), clock(), deltaTime(0), box1(Vector2f(250, 300), Vector2f(50,50)), box2(Vector2f(350, 300), Vector2f(50, 50)) {
+Game::Game() : window(VideoMode(GameWidth, GameHeight), "Game"), clock(), deltaTime(0), 
+paddle1(Vector2f(20, GameHeight/2 - PaddleHeight / 2), Vector2f(PaddleWidth,PaddleHeight)), 
+paddle2(Vector2f(GameWidth-PaddleWidth-20, GameHeight/2 - PaddleHeight / 2), Vector2f(PaddleWidth, PaddleHeight)),
+ball(Vector2f(GameWidth/2, GameHeight/2), Vector2f(BallSize, BallSize)) {
+	
 	// Set our fps to 60
 	window.setFramerateLimit(60);
+
+	// set up pause time
+	pauseTimeRemaining = PauseDuration;
+
+	// Set up UI
+	score1 = 0;
+	score2 = 0;
+	gameOver = false;
+	uiManager.SetUIPosition(
+		sf::Vector2f(25,25), 
+		sf::Vector2f(window.getSize().x - 75, 25), 
+		sf::Vector2f(window.getSize().x / 2 - 160, window.getSize().y / 2 - 120)
+	);
+
+	uiManager.SetMessageText("GET READY");
+	uiManager.SetIsDisplayingMessage(true);
 }
 
 void Game::run() {
@@ -41,21 +61,40 @@ void Game::handleInput() {
 		if (event.type == Event::Closed)
 			window.close();
 
-		// Handle keyboard input to move box 1
+		// Handle keyboard input to move paddle 1
 		if (event.type == Event::KeyPressed) {
-			if (event.key.code == Keyboard::Left) {
-				box1.setMovmentDirection(MovementDirection::Left);
-			}else if (event.key.code == Keyboard::Right) {
-				box1.setMovmentDirection(MovementDirection::Right);
+			if (event.key.code == Keyboard::Up) {
+				paddle1.setMovmentDirection(MovementDirection::Up);
+			}else if (event.key.code == Keyboard::Down) {
+				paddle1.setMovmentDirection(MovementDirection::Down);
 			}
 		}
 
 		if (event.type == Event::KeyReleased) {
-			if (event.key.code == Keyboard::Left && box1.getMovementDirection() == MovementDirection::Left) {
-				box1.setMovmentDirection(MovementDirection::None);
+			if (event.key.code == Keyboard::Up && paddle1.getMovementDirection() == MovementDirection::Up) {
+				paddle1.setMovmentDirection(MovementDirection::None);
 			}
-			if (event.key.code == Keyboard::Right && box1.getMovementDirection() == MovementDirection::Right) {
-				box1.setMovmentDirection(MovementDirection::None);
+			if (event.key.code == Keyboard::Down && paddle1.getMovementDirection() == MovementDirection::Down) {
+				paddle1.setMovmentDirection(MovementDirection::None);
+			}
+		}
+
+		if (event.type == Event::KeyPressed) {
+			if (event.key.code == Keyboard::Space) {
+				// set up pause time
+				pauseTimeRemaining = PauseDuration;
+
+				// Set up UI
+				score1 = 0;
+				score2 = 0;
+				uiManager.SetScore1(score1);
+				uiManager.SetScore2(score2);
+				gameOver = false;
+
+				resetObjects();
+
+				uiManager.SetMessageText("GET READY");
+				uiManager.SetIsDisplayingMessage(true);
 			}
 		}
 	}
@@ -63,29 +102,69 @@ void Game::handleInput() {
 
 // Implements the update portion of our Game Loop Programming Pattern
 void Game::update() {
-	// Update our boxes (i.e., move them based on the block's specified movement direction)
-	box1.update(window, deltaTime);
-	box2.update(window, deltaTime);
+	pauseTimeRemaining-= deltaTime;
+	
+	if (pauseTimeRemaining <= 0 && !gameOver) {
+		uiManager.SetIsDisplayingMessage(false);
+		// Update our boxes (i.e., move them based on the block's specified movement direction)
+		paddle1.update(window, deltaTime);
+		enemyAI.Sense(ball);
+		enemyAI.Update(paddle2, PaddleHeight);
+		paddle2.update(window, deltaTime);
+		ball.update(window, deltaTime);
 
-	// If the mouse has entered box 1 then color it green
-	if (box1.collide(Vector2f(Mouse::getPosition(window)))) {
-		box1.setFillColor(Color::Green);
-	} else {
-		box1.setFillColor(Color::White);
-	}
+		// If box 1 and 2 have collided then turn 1 blue and 2 red
+		if (paddle2.collide(paddle1.getCollider())) {
+			paddle1.setFillColor(Color::Blue);
+			paddle2.setFillColor(Color::Red);
+		}
 
-	// If the mouse has entered box 2 then color it green
-	if (box2.collide(Vector2f(Mouse::getPosition(window)))) {
-		box2.setFillColor(Color::Green);
-	}
-	else {
-		box2.setFillColor(Color::White);
-	}
+		// If paddle 1 collides with the ball(while the ball is moving left)
+		if (paddle1.collide(ball.getCollider()) && ball.getBallDirection() == BallDirection::Left) {
+			ball.knockBack(PaddleHeight, paddle1.getPosition().y);
+		}
 
-	// If box 1 and 2 have collided then turn 1 blue and 2 red
-	if (box2.collide(box1.getCollider())) {
-		box1.setFillColor(Color::Blue);
-		box2.setFillColor(Color::Red);
+		// If paddle 2 collides with the ball(while the ball is moving right)
+		if (paddle2.collide(ball.getCollider()) && ball.getBallDirection() == BallDirection::Right) {
+			ball.knockBack(PaddleHeight, paddle2.getPosition().y);
+		}
+
+		// If ball collides with the top or bottom wall
+		if (ball.getPosition().y <= 0 && ball.getVelocity().y < 0) {
+			ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+		} else if (ball.getPosition().y >= window.getSize().y - BallSize && ball.getVelocity().y > 0) {
+			ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+		}
+
+		// If ball collides with left wall, score for player 2 and reset
+		if (ball.getPosition().x <= 0) {
+			score2++;
+			uiManager.SetScore2(score2);
+			if (score2 >= 5) {
+				uiManager.SetMessageText("Player 2 WINS\nSpace to Restart");
+				uiManager.SetIsDisplayingMessage(true);
+				gameOver = true;
+			} else {
+				uiManager.SetMessageText("Player 2 Scored");
+				uiManager.SetIsDisplayingMessage(true);
+				startRound();
+			}
+		}
+
+		// If ball collides with right wall, score for player 1 and reset
+		if (ball.getPosition().x >= window.getSize().x - BallSize) {
+			score1++;
+			uiManager.SetScore1(score1);
+			if (score1 >= 5) {
+				uiManager.SetMessageText("Player 1 WINS\nSpace to Restart");
+				uiManager.SetIsDisplayingMessage(true);
+				gameOver = true;
+			} else {
+				uiManager.SetMessageText("Player 1 Scored");
+				uiManager.SetIsDisplayingMessage(true);
+				startRound();
+			}
+		}
 	}
 }
 
@@ -95,11 +174,29 @@ void Game::render() {
 	window.clear();
 
 	// Draw our boxes
-	box1.render(window, deltaTime);
-	box2.render(window, deltaTime);
+	paddle1.render(window, deltaTime);
+	paddle2.render(window, deltaTime);
+	ball.render(window, deltaTime);
+
+	// Draw our UI
+	uiManager.Render(window, deltaTime);
 
 	// Display the window buffer for this frame
 	window.display();
+}
+
+void Game::startRound() {
+	resetObjects();
+	pauseTimeRemaining = PauseDuration;
+}
+
+void Game::resetObjects() {
+	paddle1.setPosition(Vector2f(20, GameHeight / 2 - PaddleHeight / 2));
+	paddle2.setPosition(Vector2f(GameWidth - PaddleWidth - 20, GameHeight / 2 - PaddleHeight / 2));
+	ball.setPosition(Vector2f(GameWidth / 2, GameHeight / 2));
+	ball.setVelocity(Vector2f(-MinBallSpeedPerSecond, 0));
+	ball.setBallDirection(Left);
+	ball.setTotalKnocks(0);
 }
 
 // Implement destructor, make sure we free up any memory that we allocated here!

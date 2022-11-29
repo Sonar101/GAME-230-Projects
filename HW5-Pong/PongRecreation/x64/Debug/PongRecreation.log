@@ -1,6 +1,3 @@
-﻿  Box.cpp
-  Game.cpp
-  GameObject.cpp
-  Main.cpp
-  Generating Code...
+﻿  AIController.cpp
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Ball.h(22,41): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   PongRecreation.vcxproj -> C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\x64\Debug\PongRecreation.exe
