@@ -23,24 +23,15 @@ namespace gm {
     public:
         Paddle(const sf::Vector2f& position, const sf::Vector2f& size);
 
-        virtual void update(sf::RenderWindow& window, float deltaTime) override;
-
-        virtual void render(sf::RenderWindow& window, float deltaTime) override;
-
-        virtual void setPosition(const sf::Vector2f& position) override;
-
-        // Move the box from its current position to a new one with a specified velocity
-        virtual void move(const sf::Vector2f& velocity) override;
-
-        virtual void setMovmentDirection(MovementDirection direction);
-
-        virtual void setVerticalVelocity(float val);
-
-        virtual MovementDirection getMovementDirection() const;
-
-        const sf::Color& getFillColor() const;
-
+        void update(sf::RenderWindow& window, float deltaTime) override;
+        void render(sf::RenderWindow& window, float deltaTime) override;
+        void move(const sf::Vector2f& velocity) override;
+        void setPosition(const sf::Vector2f& position) override;
+        void setMovmentDirection(MovementDirection direction);
+        void setVerticalVelocity(float val);
         void setFillColor(const sf::Color& color);
+        const MovementDirection& getMovementDirection() const;
+        const sf::Color& getFillColor() const;
     };
 }
 

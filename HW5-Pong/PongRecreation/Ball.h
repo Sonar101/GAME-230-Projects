@@ -30,31 +30,18 @@ namespace gm {
     class Ball : public GameObject {
     public:
         Ball(const sf::Vector2f& position, const sf::Vector2f& size);
-
-        virtual void update(sf::RenderWindow& window, float deltaTime) override;
-
-        virtual void render(sf::RenderWindow& window, float deltaTime) override;
-
-        virtual void setPosition(const sf::Vector2f& position) override;
-
-        virtual void setVelocity(const sf::Vector2f& velocity);
-
-        // Move the box from its current position to a new one with a specified velocity
-        virtual void move(const sf::Vector2f& velocity) override;
-
-        virtual void setBallDirection(BallDirection direction);
-
-        virtual void knockBack(const float paddleHeight, const float collisionHeight);
-
-        virtual void setTotalKnocks(int val);
-
-        virtual BallDirection getBallDirection() const;
-
-        virtual const sf::Vector2f& getVelocity() const;
-
-        const sf::Color& getFillColor() const;
-
+        void update(sf::RenderWindow& window, float deltaTime) override;
+        void render(sf::RenderWindow& window, float deltaTime) override;
+        void move(const sf::Vector2f& velocity) override;
+        void knockBack(const float paddleHeight, const float collisionHeight);
+        void setPosition(const sf::Vector2f& position) override;
+        void setVelocity(const sf::Vector2f& velocity);
+        void setBallDirection(BallDirection direction);
+        void setTotalKnocks(int val);
         void setFillColor(const sf::Color& color);
+        const BallDirection& getBallDirection() const;
+        const sf::Vector2f& getVelocity() const;
+        const sf::Color& getFillColor() const;
     protected:
         sf::CircleShape body;
         BallDirection direction;

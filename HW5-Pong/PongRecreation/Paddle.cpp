@@ -25,15 +25,13 @@ void Paddle::render(sf::RenderWindow& window, float deltaTime) {
 	window.draw(body);
 }
 
-void Paddle::setPosition(const Vector2f& position) {
-	GameObject::setPosition(position);
-	// Don't forget to update the Box's shape position to match the new position
+void Paddle::move(const Vector2f& velocity) {
+	GameObject::move(velocity);
 	body.setPosition(position);
 }
 
-void Paddle::move(const Vector2f& velocity) {
-	GameObject::move(velocity);
-	// Don't forget to update the Box's shape position to match the new position
+void Paddle::setPosition(const Vector2f& position) {
+	GameObject::setPosition(position);
 	body.setPosition(position);
 }
 
@@ -45,15 +43,14 @@ void Paddle::setVerticalVelocity(float val) {
 	this->verticalVelocity= val;
 }
 
-MovementDirection Paddle::getMovementDirection() const {
+void Paddle::setFillColor(const Color& color) {
+	body.setFillColor(color);
+}
+
+const MovementDirection& Paddle::getMovementDirection() const {
 	return direction;
 }
 
-
 const Color& Paddle::getFillColor() const {
 	return body.getFillColor();
-}
-
-void Paddle::setFillColor(const Color& color) {
-	body.setFillColor(color);
 }

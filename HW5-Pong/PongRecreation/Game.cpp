@@ -27,6 +27,7 @@ ball(Vector2f(GameWidth/2, GameHeight/2), Vector2f(BallSize, BallSize)) {
 		sf::Vector2f(window.getSize().x / 2 - 160, window.getSize().y / 2 - 120)
 	);
 
+	resetObjects();
 	uiManager.SetMessageText("GET READY");
 	uiManager.SetIsDisplayingMessage(true);
 }
@@ -106,7 +107,7 @@ void Game::update() {
 	
 	if (pauseTimeRemaining <= 0 && !gameOver) {
 		uiManager.SetIsDisplayingMessage(false);
-		// Update our boxes (i.e., move them based on the block's specified movement direction)
+		// Update our paddles (i.e., move them based on the block's specified movement direction)
 		paddle1.update(window, deltaTime);
 		enemyAI.Sense(ball);
 		enemyAI.Update(paddle2, PaddleHeight);
@@ -175,7 +176,7 @@ void Game::render() {
 	// This clears the window at the beginning of every frame
 	window.clear();
 
-	// Draw our boxes
+	// Draw our game objects
 	paddle1.render(window, deltaTime);
 	paddle2.render(window, deltaTime);
 	ball.render(window, deltaTime);

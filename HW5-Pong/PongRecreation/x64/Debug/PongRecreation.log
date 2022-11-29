@@ -1,31 +1,4 @@
-﻿  Game.cpp
+﻿  Ball.cpp
 C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Ball.h(22,41): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Game.h(36,34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Game.cpp(26,35): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Game.cpp(27,69): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Game.cpp(27,39): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-          and
-          [
-              T=float
-          ]
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\Ball.cpp(32,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   PongRecreation.vcxproj -> C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW5-Pong\PongRecreation\x64\Debug\PongRecreation.exe
