@@ -113,27 +113,25 @@ void Game::update() {
 		paddle2.update(window, deltaTime);
 		ball.update(window, deltaTime);
 
-		// If box 1 and 2 have collided then turn 1 blue and 2 red
-		if (paddle2.collide(paddle1.getCollider())) {
-			paddle1.setFillColor(Color::Blue);
-			paddle2.setFillColor(Color::Red);
-		}
-
 		// If paddle 1 collides with the ball(while the ball is moving left)
 		if (paddle1.collide(ball.getCollider()) && ball.getBallDirection() == BallDirection::Left) {
 			ball.knockBack(PaddleHeight, paddle1.getPosition().y);
+			audio.PlaySFX(paddleHit);
 		}
 
 		// If paddle 2 collides with the ball(while the ball is moving right)
 		if (paddle2.collide(ball.getCollider()) && ball.getBallDirection() == BallDirection::Right) {
 			ball.knockBack(PaddleHeight, paddle2.getPosition().y);
+			audio.PlaySFX(paddleHit);
 		}
 
 		// If ball collides with the top or bottom wall
 		if (ball.getPosition().y <= 0 && ball.getVelocity().y < 0) {
 			ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+			audio.PlaySFX(wallHit);
 		} else if (ball.getPosition().y >= window.getSize().y - BallSize && ball.getVelocity().y > 0) {
 			ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+			audio.PlaySFX(wallHit);
 		}
 
 		// If ball collides with left wall, score for player 2 and reset
@@ -141,10 +139,12 @@ void Game::update() {
 			score2++;
 			uiManager.SetScore2(score2);
 			if (score2 >= 5) {
+				audio.PlaySFX(gameEnd);
 				uiManager.SetMessageText("Player 2 WINS\nSpace to Restart");
 				uiManager.SetIsDisplayingMessage(true);
 				gameOver = true;
 			} else {
+				audio.PlaySFX(score);
 				uiManager.SetMessageText("Player 2 Scored");
 				uiManager.SetIsDisplayingMessage(true);
 				startRound();
@@ -156,10 +156,12 @@ void Game::update() {
 			score1++;
 			uiManager.SetScore1(score1);
 			if (score1 >= 5) {
+				audio.PlaySFX(gameEnd);
 				uiManager.SetMessageText("Player 1 WINS\nSpace to Restart");
 				uiManager.SetIsDisplayingMessage(true);
 				gameOver = true;
 			} else {
+				audio.PlaySFX(score);
 				uiManager.SetMessageText("Player 1 Scored");
 				uiManager.SetIsDisplayingMessage(true);
 				startRound();
@@ -194,9 +196,22 @@ void Game::resetObjects() {
 	paddle1.setPosition(Vector2f(20, GameHeight / 2 - PaddleHeight / 2));
 	paddle2.setPosition(Vector2f(GameWidth - PaddleWidth - 20, GameHeight / 2 - PaddleHeight / 2));
 	ball.setPosition(Vector2f(GameWidth / 2, GameHeight / 2));
-	ball.setVelocity(Vector2f(-MinBallSpeedPerSecond, 0));
-	ball.setBallDirection(Left);
 	ball.setTotalKnocks(0);
+
+	// calculate random launch direction
+	float randCalcA = Random::Range(-1.0f, 1.0f); // between -1 and 1
+	float randCalcB = Random::Range(-1.0f, 1.0f); // between -1 and 1
+	
+	float launchAngle = MaxLaunchAngle * randCalcA;
+
+	if (randCalcB >= 0) {
+		ball.setVelocity(sf::Vector2f(MinBallSpeedPerSecond * cos(launchAngle), MinBallSpeedPerSecond * -sin(launchAngle)));
+		ball.setBallDirection(BallDirection::Right);
+	}
+	else {
+		ball.setVelocity(sf::Vector2f(-(MinBallSpeedPerSecond * cos(launchAngle)), MinBallSpeedPerSecond * -sin(launchAngle)));
+		ball.setBallDirection(BallDirection::Left);
+	}
 }
 
 // Implement destructor, make sure we free up any memory that we allocated here!

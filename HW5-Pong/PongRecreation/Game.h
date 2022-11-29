@@ -18,6 +18,12 @@
 #include "Ball.h"
 #include "UIManager.h"
 #include "AIController.h"
+#include "SoundManager.h"
+#include "Random.h"
+
+// math includes and defines
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 // Place our classes, functions, variables, and so forth in their own namespace to avoid naming collisions
 namespace gm {
@@ -27,6 +33,7 @@ namespace gm {
 	const int PaddleHeight = 100;
 	const int BallSize = 20;
 	const int PauseDuration = 2; // seconds
+	const int MaxLaunchAngle = M_PI / 3; // 60 degrees in radians
 
 	/* Our Game Class                               *
 	 * Implements the Game Loop Programming Pattern */
@@ -48,6 +55,8 @@ namespace gm {
 		bool gameOver;
 		UIManager uiManager;
 		AIController enemyAI;
+		// Sound things
+		SoundManager audio;
 	public:
 		/* Protoypes */
 		// Constructor
