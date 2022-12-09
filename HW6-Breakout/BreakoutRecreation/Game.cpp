@@ -19,6 +19,7 @@ ball(Vector2f(GameWidth / 2, GameHeight / 2), Vector2f(BallSize, BallSize))
 	// Set up game state
 	lives = 2;
 	score = 0;
+	currLevel = 1;
 	gameOver = false;
 	waitingToReloadBall = false;
 
@@ -66,6 +67,13 @@ void Game::run() {
 		// Then render...
 		render();
 	}
+
+	for (int col = 0; col < NumBlockColumns; col++) {
+		for (int row = 0; row < NumBlockRows; row++) {
+			delete &blocks[col][row];
+		}
+	}
+	delete [] blocks; 
 }
 
 // Implements the handle input portion of our Game Loop Programming Pattern
@@ -103,6 +111,27 @@ void Game::update() {
 	if (ball.getLaunched() == false) {
 		ball.setPosition(sf::Vector2f(paddle.getPosition().x + PaddleWidth / 2 + BallSize, paddle.getPosition().y - BallSize));
 	} else {
+		
+		// --- check for level win condition
+		int numBlocksRemaining = 0;
+		for (int col = 0; col < NumBlockColumns; col++) {
+			for (int row = 0; row < NumBlockRows; row++) {
+				if(blocks[col][row].getIsAlive()) {
+					numBlocksRemaining++;
+				}
+			}
+		}
+		if (numBlocksRemaining <= 0) {
+			// Set up next level
+			ball.setLaunched(false);
+			ball.setVelocity(sf::Vector2f(1,1));
+			ball.setSpeedTick(ball.getSpeedTick() + 1);
+			generateLevel("level1.txt");
+			currLevel++;
+			uiManager.SetBackgroundText("Level " + std::to_string(currLevel));
+		}
+		
+		
 		// --- Acounting for different collisions
 		
 		// If paddle collides with the ball(while the ball is moving down)
@@ -111,6 +140,7 @@ void Game::update() {
 			audio.PlaySFX(paddleHit);
 		}
 
+		// If ball collides with any blocks
 		for (int col = 0; col < NumBlockColumns; col++) {
 			for (int row = 0; row < NumBlockRows; row++) {
 				if (blocks[col][row].getIsAlive()) {

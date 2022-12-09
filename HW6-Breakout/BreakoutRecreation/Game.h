@@ -61,6 +61,7 @@ namespace gm {
 		// Game State Variables
 		int lives;
 		int score;
+		int currLevel;
 		bool gameOver;
 		bool waitingToReloadBall;
 		// UI Text things

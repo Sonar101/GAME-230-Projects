@@ -19,9 +19,9 @@
 namespace gm {
     const int BallSize = 20;
     // Ball movement speed
-    const int MinBallSpeedPerSecond = 300;
+    const int MinBallSpeedPerSecond = 400;
     const int MaxBounceAngle = 7 * M_PI / 18; // 70 degrees in radians
-    const int knockSpeedAdd = 50;
+    const int speedTickAdd = 150;
     
     class Ball : public GameObject {
     public:
@@ -32,16 +32,17 @@ namespace gm {
         void knockBack(const float paddleHeight, const float collisionHeight);
         void setPosition(const sf::Vector2f& position) override;
         void setVelocity(const sf::Vector2f& velocity);
-        void setTotalKnocks(int val);
+        void setSpeedTick(int val);
         void setLaunched(bool condition);
         void setFillColor(const sf::Color& color);
         const sf::Vector2f& getVelocity() const;
         bool getLaunched() const;
+        const int getSpeedTick() const;
         const sf::Color& getFillColor() const;
     protected:
         sf::CircleShape body;
         sf::Vector2f velocity;
-        int totalKnocks;
+        int speedTick;
         bool launched;
 	};
 
