@@ -17,7 +17,9 @@ namespace gm {
         paddleHit,
         wallHit,
         loseLife,
-        gameEnd
+        gameEnd,
+        blockBreak,
+        blockCrack
     };
 
     class SoundManager {
@@ -30,6 +32,8 @@ namespace gm {
         sf::SoundBuffer wallHitSFX;
         sf::SoundBuffer loseLifeSFX;
         sf::SoundBuffer gameEndSFX;
+        sf::SoundBuffer blockBreakSFX;
+        sf::SoundBuffer blockCrackSFX;
         sf::Sound sound;
     };
 }

@@ -1,3 +1,10 @@
-﻿  Block.cpp
+﻿  Game.cpp
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Ball.h(23,41): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
 C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Block.h(5,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.h(43,34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.cpp(237): warning C4172: returning address of local variable or temporary
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.cpp(241): warning C4172: returning address of local variable or temporary
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.cpp(245): warning C4172: returning address of local variable or temporary
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.cpp(249): warning C4172: returning address of local variable or temporary
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.cpp(253): warning C4172: returning address of local variable or temporary
   BreakoutRecreation.vcxproj -> C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\x64\Debug\BreakoutRecreation.exe

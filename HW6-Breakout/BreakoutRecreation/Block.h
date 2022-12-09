@@ -6,7 +6,7 @@
 
 namespace gm {
     
-    const sf::Vector2f BLOCKSIZE = sf::Vector2f(80, 20);
+    const sf::Vector2f BLOCKSIZE = sf::Vector2f(80, 30);
 
     enum BlockType {
         weak,

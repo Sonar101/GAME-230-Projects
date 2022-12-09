@@ -42,10 +42,11 @@ void Block::setUpBlock(const BlockType& type) {
 	if (blockType == weak) {
 		health = 1;
 		pointValue = 100;
+		setFillColor(sf::Color(0, 255, 42));
 	} else {
 		health = 2;
 		pointValue = 200;
-		setFillColor(sf::Color(0,34,255));
+		setFillColor(sf::Color(181,0,0));
 	}
 }
 
@@ -58,7 +59,7 @@ int Block::TakeDamage() {
 
 	if (blockType == strong) {
 		// change color
-		setFillColor(sf::Color(0, 170, 255));
+		setFillColor(sf::Color(245, 142, 142));
 	}
 
 	if (health <= 0) {

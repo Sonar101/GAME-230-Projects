@@ -13,6 +13,7 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Main.hpp>
 #include <fstream>
+#include <math.h>  
 
  /* Our Includes */
 #include "Paddle.h"
@@ -81,7 +82,7 @@ namespace gm {
 		void render();
 		// Helpers
 		void startRound();
-		void generateLevel(const std::string& textfileName);
+		void generateLevel(int currentLevelNum);
 		const KnockSide& CalcKnockSide(const sf::Vector2f& ballPos, const sf::Vector2f& blockPos);
 		// Destructor
 		~Game();

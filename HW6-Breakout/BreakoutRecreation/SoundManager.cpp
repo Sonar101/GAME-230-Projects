@@ -25,8 +25,12 @@ void SoundManager::PlaySFX(SoundEffect type) {
 		sound.setBuffer(wallHitSFX);
 	} else if (type == loseLife) {
 		sound.setBuffer(loseLifeSFX);
-	} else {
+	} else if (type == gameEnd) {
 		sound.setBuffer(gameEndSFX);
+	} else if (type == blockBreak) {
+		sound.setBuffer(blockBreakSFX);
+	} else {
+		sound.setBuffer(blockCrackSFX);
 	}
 
 	sound.play();

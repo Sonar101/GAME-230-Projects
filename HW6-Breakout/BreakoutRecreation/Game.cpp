@@ -19,7 +19,7 @@ ball(Vector2f(GameWidth / 2, GameHeight / 2), Vector2f(BallSize, BallSize))
 	// Set up game state
 	lives = 2;
 	score = 0;
-	currLevel = 1;
+	currLevel = 0;
 	gameOver = false;
 	waitingToReloadBall = false;
 
@@ -33,7 +33,7 @@ ball(Vector2f(GameWidth / 2, GameHeight / 2), Vector2f(BallSize, BallSize))
 			blocks[col][row].setPosition(sf::Vector2f(BLOCKSIZE.x * col, BLOCKSIZE.y * row));
 		}
 	}
-	generateLevel("level1.txt");
+	generateLevel(currLevel);
 
 	// Set up UI
 	uiManager.SetUIPosition(
@@ -67,11 +67,9 @@ void Game::run() {
 		// Then render...
 		render();
 	}
-
+	
 	for (int col = 0; col < NumBlockColumns; col++) {
-		for (int row = 0; row < NumBlockRows; row++) {
-			delete &blocks[col][row];
-		}
+		delete [] blocks[col];
 	}
 	delete [] blocks; 
 }
@@ -126,9 +124,9 @@ void Game::update() {
 			ball.setVelocity(sf::Vector2f(0, 1));
 			ball.setLaunched(false);
 			ball.setSpeedTick(ball.getSpeedTick() + 1);
-			generateLevel("level1.txt");
 			currLevel++;
-			uiManager.SetBackgroundText("Level " + std::to_string(currLevel));
+			generateLevel(currLevel);
+			uiManager.SetBackgroundText("Level " + std::to_string(currLevel + 1));
 		}
 		
 		
@@ -151,6 +149,8 @@ void Game::update() {
 						KnockSide knockDir = CalcKnockSide(ball.getPosition(), blocks[col][row].getPosition());
 						if (knockDir == Vertical) {
 							ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+						} else {
+							ball.setVelocity(sf::Vector2f(-ball.getVelocity().x, ball.getVelocity().y));
 						}
 					}
 				}
@@ -222,24 +222,42 @@ Game::~Game() {
 const KnockSide& Game::CalcKnockSide(const sf::Vector2f& ballPos, const sf::Vector2f& blockPos) {
 	sf::Vector2f ballCenterPos = sf::Vector2f(ballPos.x + BallSize/2, ballPos.y + BallSize / 2);
 	sf::Vector2f blockCenterPos = sf::Vector2f(blockPos.x + BLOCKSIZE.x / 2, blockPos.y + BLOCKSIZE.y / 2);
+	sf::Vector2f diffVector = sf::Vector2f(ballCenterPos.x - blockCenterPos.x, -(ballCenterPos.y - blockCenterPos.y));
 
-	float xDifference = abs(blockCenterPos.x - ballCenterPos.x);
 
-	KnockSide side;
-	
-	if (xDifference < BLOCKSIZE.x - 2) {
-		side = Vertical;
+	float angle = atan2(diffVector.x,diffVector.y);
+
+	//std::cout << "----"<< std::endl;
+	//std::cout << "x: " << diffVector.x << std::endl;
+	//std::cout << "y: " << diffVector.y << std::endl;
+	//std::cout << "Angle: " << angle << std::endl;
+
+	if (angle < -.8125f * M_PI) {
+		//std::cout << "left" << std::endl;
+		return Horizontal;
+	}
+	else if (angle < -.1875f * M_PI) {
+		//std::cout << "bottom" << std::endl;
+		return Vertical;
+	}
+	else if (angle < .1875f * M_PI) {
+		//std::cout << "right" << std::endl;
+		return Horizontal;
+	}
+	else if (angle < .8125f * M_PI) {
+		//std::cout << "top" << std::endl;
+		return Vertical;
 	}
 	else {
-		side = Horizontal;
+		//std::cout << "left" << std::endl;
+		return Horizontal;
 	}
-
-	return side;
 }
 
-void Game::generateLevel(const std::string& textfileName) {
+void Game::generateLevel(int currentLevelNum) {
 	std::ifstream inputLevelFile;
-	inputLevelFile.open(textfileName, std::ios::out);
+	int levelSelect = (currentLevelNum % 3) + 1;
+	inputLevelFile.open("level" + std::to_string(levelSelect) + ".txt", std::ios::out);
 	if (!inputLevelFile.is_open())
 	{
 		// can't open file, so give an error message
