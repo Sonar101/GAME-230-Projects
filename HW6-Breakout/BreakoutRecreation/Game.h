@@ -12,10 +12,12 @@
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Main.hpp>
+#include <fstream>
 
  /* Our Includes */
 #include "Paddle.h"
 #include "Ball.h"
+#include "Block.h"
 #include "UIManager.h"
 #include "AIController.h"
 #include "SoundManager.h"
@@ -27,10 +29,20 @@
 
 // Place our classes, functions, variables, and so forth in their own namespace to avoid naming collisions
 namespace gm {
+	
+	enum KnockSide
+	{
+		Vertical,
+		Horizontal
+	};
+	
 	const int GameWidth = 800;
 	const int GameHeight = 600;
 	const int PauseDuration = 2; // seconds
 	const int MaxLaunchAngle = M_PI / 3; // 60 degrees in radians
+	
+	const int NumBlockColumns = 10;
+	const int NumBlockRows = 6;
 
 	/* Our Game Class                               *
 	 * Implements the Game Loop Programming Pattern */
@@ -45,6 +57,7 @@ namespace gm {
 		// Our game objects
 		Paddle paddle;
 		Ball ball;
+		Block** blocks;
 		// Game State Variables
 		int lives;
 		int score;
@@ -67,6 +80,8 @@ namespace gm {
 		void render();
 		// Helpers
 		void startRound();
+		void generateLevel(const std::string& textfileName);
+		const KnockSide& CalcKnockSide(const sf::Vector2f& ballPos, const sf::Vector2f& blockPos);
 		// Destructor
 		~Game();
 	};
