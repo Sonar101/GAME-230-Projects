@@ -19,7 +19,7 @@
 namespace gm {
     // Ball movement speed
     const int MinBallSpeedPerSecond = 300;
-    const int MaxBounceAngle = 7 * M_PI / 18; // 70 degrees in radians
+    const int MaxBounceAngle = 5 * M_PI / 12; // 70 degrees in radians
     const int knockSpeedAdd = 50;
 
     enum BallDirection {

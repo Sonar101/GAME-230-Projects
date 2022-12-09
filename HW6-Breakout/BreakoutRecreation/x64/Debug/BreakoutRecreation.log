@@ -1,0 +1,4 @@
+﻿  Game.cpp
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Ball.h(23,41): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\Game.h(33,34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  BreakoutRecreation.vcxproj -> C:\Dev\School Dev\GAME-230-Projects\GAME-230-Projects\HW6-Breakout\BreakoutRecreation\x64\Debug\BreakoutRecreation.exe
