@@ -85,6 +85,7 @@ void Game::handleInput() {
 			window.close();
 
 		if (event.type == sf::Event::MouseButtonPressed) {
+			ball.setVelocity(sf::Vector2f(0,1));
 			ball.setLaunched(true);
 		}
 	}
@@ -101,6 +102,27 @@ void Game::update() {
 			uiManager.SetLivesText(lives);
 		}
 	}
+
+	// --- check for level win condition
+	int numBlocksRemaining = 0;
+	for (int col = 0; col < NumBlockColumns; col++) {
+		for (int row = 0; row < NumBlockRows; row++) {
+			if (blocks[col][row].getIsAlive()) {
+				numBlocksRemaining++;
+			}
+		}
+	}
+	if (numBlocksRemaining <= 0) {
+		// Set up next level
+		ball.setVelocity(sf::Vector2f(0, 1));
+		ball.setPosition(paddle.getPosition());
+		ball.setLaunched(false);
+		ball.setSpeedTicks(currLevel, 0);
+		currLevel++;
+		generateLevel(currLevel);
+		uiManager.SetBackgroundText("Level " + std::to_string(currLevel + 1));
+		audio.PlaySFX(levelComplete);
+	}
 	
 	// Update our paddle (i.e., move it based on the block's specified movement direction)
 	paddle.update(window, deltaTime);
@@ -109,32 +131,13 @@ void Game::update() {
 	if (ball.getLaunched() == false) {
 		ball.setPosition(sf::Vector2f(paddle.getPosition().x + PaddleWidth / 2 + BallSize, paddle.getPosition().y - BallSize));
 	} else {
-		
-		// --- check for level win condition
-		int numBlocksRemaining = 0;
-		for (int col = 0; col < NumBlockColumns; col++) {
-			for (int row = 0; row < NumBlockRows; row++) {
-				if(blocks[col][row].getIsAlive()) {
-					numBlocksRemaining++;
-				}
-			}
-		}
-		if (numBlocksRemaining <= 0) {
-			// Set up next level
-			ball.setVelocity(sf::Vector2f(0, 1));
-			ball.setLaunched(false);
-			ball.setSpeedTick(ball.getSpeedTick() + 1);
-			currLevel++;
-			generateLevel(currLevel);
-			uiManager.SetBackgroundText("Level " + std::to_string(currLevel + 1));
-		}
-		
-		
+	
 		// --- Acounting for different collisions
 		
 		// If paddle collides with the ball(while the ball is moving down)
 		if (paddle.collide(ball.getCollider()) && ball.getVelocity().y > 0) {
 			ball.knockBack(PaddleWidth, paddle.getPosition().x);
+			ball.increaseSpeedTicks(0,1);
 			audio.PlaySFX(paddleHit);
 		}
 
@@ -143,15 +146,18 @@ void Game::update() {
 			for (int row = 0; row < NumBlockRows; row++) {
 				if (blocks[col][row].getIsAlive()) {
 					if (blocks[col][row].collide(ball.getCollider())) {
-						audio.PlaySFX(paddleHit);
-						score+= blocks[col][row].TakeDamage();
+						score+= blocks[col][row].TakeDamage(audio);
 						uiManager.SetScoreText(score);
+						ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
+
+						/*
 						KnockSide knockDir = CalcKnockSide(ball.getPosition(), blocks[col][row].getPosition());
 						if (knockDir == Vertical) {
 							ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
 						} else {
 							ball.setVelocity(sf::Vector2f(-ball.getVelocity().x, ball.getVelocity().y));
 						}
+						*/
 					}
 				}
 			}
@@ -179,11 +185,13 @@ void Game::update() {
 				waitingToReloadBall = true;
 				ballReloadTimeRemaining = PauseDuration;
 			} else {
-				audio.PlaySFX(loseLife);
+				audio.PlaySFX(SoundEffect::gameOver);
 				uiManager.SetBackgroundText("GAME OVER");
 				uiManager.SetBackgroundFontColor(sf::Color(110,0,0));
 				gameOver = true;
 			}
+			ball.setPosition(sf::Vector2f(GameWidth ,GameHeight + BallSize));
+			ball.setVelocity(sf::Vector2f(0,0));
 		}
 	}
 }

@@ -13,7 +13,16 @@ SoundManager::SoundManager() {
 	if (!loseLifeSFX.loadFromFile("SFX/loseLife.wav")) {
 		throw("ERROR — Could not load sound");
 	}
-	if (!gameEndSFX.loadFromFile("SFX/gameEnd.wav")) {
+	if (!gameOverSFX.loadFromFile("SFX/gameOver.wav")) {
+		throw("ERROR — Could not load sound");
+	}
+	if (!blockBreakSFX.loadFromFile("SFX/blockBreak.wav")) {
+		throw("ERROR — Could not load sound");
+	}
+	if (!blockCrackSFX.loadFromFile("SFX/blockCrack.wav")) {
+		throw("ERROR — Could not load sound");
+	}
+	if (!levelCompleteSFX.loadFromFile("SFX/levelComplete.wav")) {
 		throw("ERROR — Could not load sound");
 	}
 }
@@ -25,12 +34,14 @@ void SoundManager::PlaySFX(SoundEffect type) {
 		sound.setBuffer(wallHitSFX);
 	} else if (type == loseLife) {
 		sound.setBuffer(loseLifeSFX);
-	} else if (type == gameEnd) {
-		sound.setBuffer(gameEndSFX);
+	} else if (type == gameOver) {
+		sound.setBuffer(gameOverSFX);
 	} else if (type == blockBreak) {
 		sound.setBuffer(blockBreakSFX);
-	} else {
+	} else if (type == blockCrack) {
 		sound.setBuffer(blockCrackSFX);
+	} else {
+		sound.setBuffer(levelCompleteSFX);
 	}
 
 	sound.play();

@@ -2,6 +2,7 @@
 #define BLOCK_H
 
 #include "GameObject.h"
+#include "SoundManager.h"
 #include <iostream>;
 
 namespace gm {
@@ -36,7 +37,7 @@ namespace gm {
         bool getIsAlive() const;
 
         // returns value of points
-        virtual int TakeDamage();
+        virtual int TakeDamage(SoundManager& sManager);
         
         const sf::Color& getFillColor() const;
     };

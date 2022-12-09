@@ -5,7 +5,8 @@ using namespace gm;
 
 Ball::Ball(const Vector2f& position, const Vector2f& size) : 
 GameObject(position, size), 
-speedTick(0),
+levelTicks(0),
+bounceTicks(0),
 launched(false)
 {
 	body.setPosition(position);
@@ -33,9 +34,14 @@ void Ball::knockBack(const float paddleWidth, const float paddleX) {
 	float normalizedRelativeColX = -(relativeColX / (paddleWidth / 2));
 	float currBounceAngle = (MaxBounceAngle * normalizedRelativeColX) + (M_PI / 2);
 
-	float currSpeed = MinBallSpeedPerSecond + (speedTick * speedTickAdd);
+	float currSpeed = MinBallSpeedPerSecond + (levelTicks * levelSpeedAdd) + (bounceTicks * bounceSpeedAdd);
 	
 	setVelocity(sf::Vector2f(-(currSpeed * cos(currBounceAngle)), currSpeed * -sin(currBounceAngle)));
+}
+
+void Ball::increaseSpeedTicks(int levelVal, int bounceVal) {
+	levelTicks += levelVal;
+	bounceTicks += bounceVal;
 }
 
 void Ball::setPosition(const Vector2f& position) {
@@ -47,8 +53,9 @@ void Ball::setVelocity(const sf::Vector2f& velocity) {
 	this->velocity = velocity;
 }
 
-void Ball::setSpeedTick(int val) {
-	speedTick = val;
+void Ball::setSpeedTicks(int levelVal, int bounceVal) {
+	levelTicks = levelVal;
+	bounceTicks = bounceVal;
 }
 
 void Ball::setLaunched(bool condition) {
@@ -65,10 +72,6 @@ const sf::Vector2f& Ball::getVelocity() const {
 
 bool Ball::getLaunched() const {
 	return launched;
-}
-
-const int Ball::getSpeedTick() const {
-	return speedTick;
 }
 
 const Color& Ball::getFillColor() const {

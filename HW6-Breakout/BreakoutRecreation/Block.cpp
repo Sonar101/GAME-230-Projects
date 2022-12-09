@@ -54,16 +54,18 @@ bool Block::getIsAlive() const {
 	return isAlive;
 }
 
-int Block::TakeDamage() {
+int Block::TakeDamage(SoundManager& sManager) {
 	health--;
 
 	if (blockType == strong) {
 		// change color
 		setFillColor(sf::Color(245, 142, 142));
+		sManager.PlaySFX(blockCrack);
 	}
 
 	if (health <= 0) {
 		isAlive = false;
+		sManager.PlaySFX(blockBreak);
 		return pointValue;
 	} else {
 		return 0;
