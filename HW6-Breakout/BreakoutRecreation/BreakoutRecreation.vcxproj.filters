@@ -42,9 +42,6 @@
     <ClCompile Include="Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WeakBlock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -72,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WeakBlock.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

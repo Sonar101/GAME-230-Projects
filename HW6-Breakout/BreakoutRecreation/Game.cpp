@@ -38,7 +38,7 @@ ball(Vector2f(GameWidth / 2, GameHeight / 2), Vector2f(BallSize, BallSize))
 	// Set up UI
 	uiManager.SetUIPosition(
 		sf::Vector2f(15, GameHeight - 120), 
-		sf::Vector2f(GameWidth - 75, GameHeight - 120),
+		sf::Vector2f(GameWidth - 125, GameHeight - 120),
 		sf::Vector2f(GameWidth/2 - 120,GameHeight/2 - 40)
 	);
 	
@@ -123,8 +123,8 @@ void Game::update() {
 		}
 		if (numBlocksRemaining <= 0) {
 			// Set up next level
+			ball.setVelocity(sf::Vector2f(0, 1));
 			ball.setLaunched(false);
-			ball.setVelocity(sf::Vector2f(1,1));
 			ball.setSpeedTick(ball.getSpeedTick() + 1);
 			generateLevel("level1.txt");
 			currLevel++;
@@ -146,7 +146,8 @@ void Game::update() {
 				if (blocks[col][row].getIsAlive()) {
 					if (blocks[col][row].collide(ball.getCollider())) {
 						audio.PlaySFX(paddleHit);
-						blocks[col][row].TakeDamage();
+						score+= blocks[col][row].TakeDamage();
+						uiManager.SetScoreText(score);
 						KnockSide knockDir = CalcKnockSide(ball.getPosition(), blocks[col][row].getPosition());
 						if (knockDir == Vertical) {
 							ball.setVelocity(sf::Vector2f(ball.getVelocity().x, -ball.getVelocity().y));
@@ -233,8 +234,6 @@ const KnockSide& Game::CalcKnockSide(const sf::Vector2f& ballPos, const sf::Vect
 		side = Horizontal;
 	}
 
-	std::cout << "Side - " << side << std::endl;
-
 	return side;
 }
 
@@ -291,7 +290,6 @@ void Game::generateLevel(const std::string& textfileName) {
 			row++;
 		}
 
-		std::cout << "Level Loaded" << std::endl;
 		inputLevelFile.close();
 	}
 }

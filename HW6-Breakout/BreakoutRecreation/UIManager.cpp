@@ -40,8 +40,6 @@ void UIManager::SetLivesText(int val) {
 
 void UIManager::SetScoreText(int val) {
 	scoreText.setString(std::to_string(val));
-	FloatRect bounds = scoreText.getLocalBounds();
-	scoreText.setPosition(scoreText.getPosition().x - bounds.width, scoreText.getPosition().y);
 }
 
 void UIManager::SetBackgroundText(const std::string& text) {

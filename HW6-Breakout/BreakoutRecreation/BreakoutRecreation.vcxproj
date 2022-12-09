@@ -142,7 +142,6 @@
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="UIManager.cpp" />
-    <ClCompile Include="WeakBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIController.h" />
@@ -154,7 +153,6 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="UIManager.h" />
-    <ClInclude Include="WeakBlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

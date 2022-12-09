@@ -3,12 +3,12 @@
 using namespace sf;
 using namespace gm;
 
-Block::Block() : GameObject(sf::Vector2f(0, 0), BLOCKSIZE), isAlive(true), blockType(weak), health(1) {
+Block::Block() : GameObject(sf::Vector2f(0, 0), BLOCKSIZE), isAlive(true), blockType(weak), health(1), pointValue(1) {
 	body.setPosition(position);
 	body.setSize(BLOCKSIZE);
 }
 
-Block::Block(const Vector2f& position, const Vector2f& size) : GameObject(position, size), isAlive(true), blockType(weak), health(1) {
+Block::Block(const Vector2f& position, const Vector2f& size) : GameObject(position, size), isAlive(true), blockType(weak), health(1), pointValue(1) {
 	body.setPosition(position);
 	body.setSize(size);
 }
@@ -41,8 +41,10 @@ void Block::setUpBlock(const BlockType& type) {
 	
 	if (blockType == weak) {
 		health = 1;
+		pointValue = 100;
 	} else {
 		health = 2;
+		pointValue = 200;
 		setFillColor(sf::Color(0,34,255));
 	}
 }
@@ -51,16 +53,19 @@ bool Block::getIsAlive() const {
 	return isAlive;
 }
 
-void Block::TakeDamage() {
+int Block::TakeDamage() {
 	health--;
-
-	if (health <= 0) {
-		isAlive = false;
-	}
 
 	if (blockType == strong) {
 		// change color
 		setFillColor(sf::Color(0, 170, 255));
+	}
+
+	if (health <= 0) {
+		isAlive = false;
+		return pointValue;
+	} else {
+		return 0;
 	}
 }
 

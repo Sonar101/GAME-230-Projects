@@ -2,6 +2,7 @@
 #define BLOCK_H
 
 #include "GameObject.h"
+#include <iostream>;
 
 namespace gm {
     
@@ -20,6 +21,7 @@ namespace gm {
         BlockType blockType;
         bool isAlive;
         int health;
+        int pointValue;
     public:
         Block();
         Block(const sf::Vector2f& position, const sf::Vector2f& size);
@@ -33,7 +35,8 @@ namespace gm {
         void setIsAlive(bool condition);
         bool getIsAlive() const;
 
-        virtual void TakeDamage();
+        // returns value of points
+        virtual int TakeDamage();
         
         const sf::Color& getFillColor() const;
     };
